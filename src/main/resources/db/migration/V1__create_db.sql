@@ -1,0 +1,24 @@
+CREATE TABLE client(
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(200) NOT NULL,
+    CONSTRAINT client_name_min CHECK(CHAR_LENGTH(name) >= 3)
+);
+
+CREATE TABLE planet(
+    id VARCHAR(200) PRIMARY KEY NOT NULL,
+    name VARCHAR(500) NOT NULL,
+    CONSTRAINT planet_id_match CHECK(id REGEXP '^[A-Z0-9]+$'),
+    CONSTRAINT planet_name_min CHECK(CHAR_LENGTH(name) >= 1)
+);
+
+CREATE TABLE ticket(
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    created_at TIMESTAMP(0) WITH TIME ZONE
+        DEFAULT CURRENT_TIMESTAMP,
+    client_id BIGINT NOT NULL,
+    from_planet_id VARCHAR(200) NOT NULL,
+    to_planet_id VARCHAR(200) NOT NULL,
+    FOREIGN KEY(client_id) REFERENCES client(id) ON DELETE CASCADE,
+    FOREIGN KEY(from_planet_id) REFERENCES planet(id) ON DELETE CASCADE,
+    FOREIGN KEY(to_planet_id) REFERENCES planet(id) ON DELETE CASCADE
+);
